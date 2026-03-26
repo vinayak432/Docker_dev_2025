@@ -1,0 +1,10 @@
+FROM maven:3.9.12-eclipse-temurin-11 AS mavenbuilder
+WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
+
+FROM tomcat:9.0-jdk11-temurin
+#COPY --from=mavenbuilder /app/target/bus-booking-app.war \
+ #    /usr/local/tomcat/webapps/bus-booking-app.war
+COPY --from=mavenbuilder /app/target/*.war \
+     /usr/local/tomcat/webapps/bus-booking-app.war
